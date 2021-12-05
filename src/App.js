@@ -1,14 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import useKeyboard from './hooks/useKeyboard';
+import Key from './Key';
+import PresetButton from './PresetButton';
+import presets from './hooks/presets';
 import './App.css';
 
 function App() {
   const [mouseDown, setMouseDown] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState('1');
   const { notes, noteOns } = useKeyboard();
 
   useEffect(() => {
-    console.log(noteOns);
-  }, [notes, noteOns]);
+    console.log(selectedPreset);
+  }, [selectedPreset]);
 
   const handleMouseDown = (event) => {
     const noteName = event.target.getAttribute('note');
@@ -26,6 +30,18 @@ function App() {
     if (mouseDown) {
       handleMouseDown(event);
     }
+  };
+
+  const keyHandlers = {
+    handleMouseDown,
+    handleMouseUp,
+    handleMouseEnter,
+  };
+
+  const handleButtonClick = (event) => {
+    const presetNum = event.target.getAttribute('presetnum');
+    console.log(presetNum);
+    setSelectedPreset(presetNum);
   };
 
   return (
@@ -87,7 +103,7 @@ function App() {
           <p>internal voice</p>
           <div id="patch-display">
             <p>bnk 1</p>
-            <p>piano 1</p>
+            <p>{presets[parseInt(selectedPreset) - 1].toUpperCase()}</p>
           </div>
         </div>
         <div id="buttons-container">
@@ -95,100 +111,45 @@ function App() {
             <p>Bank</p>
             <div className="led-red"></div>
           </div>
-          <div className="button">
-            <p>1</p>
-            <div className="led-red"></div>
-          </div>
-          <div className="button">
-            <p>2</p>
-            <div className="led-red"></div>
-          </div>
-          <div className="button">
-            <p>3</p>
-            <div className="led-red"></div>
-          </div>
-          <div className="button">
-            <p>4</p>
-            <div className="led-red"></div>
-          </div>
-          <div className="button">
-            <p>5</p>
-            <div className="led-red on"></div>
-          </div>
+          {Array(5)
+            .fill(0)
+            .map((el, idx) => idx + 1)
+            .map((number) => (
+              <PresetButton
+                key={number}
+                presetNum={String(number)}
+                handleButtonClick={handleButtonClick}
+                selectedPreset={selectedPreset}
+              />
+            ))}
           <div className="button shift">
             <p>Shift</p>
             <div className="led-red"></div>
           </div>
-          <div className="button">
-            <p>6</p>
-            <div className="led-red"></div>{' '}
-          </div>
-          <div className="button">
-            <p>7</p>
-            <div className="led-red"></div>
-          </div>
-          <div className="button">
-            <p>8</p>
-            <div className="led-red"></div>
-          </div>
-          <div className="button">
-            <p>9</p>
-            <div className="led-red"></div>
-          </div>
-          <div className="button">
-            <p>10</p>
-            <div className="led-red"></div>
-          </div>
+          {Array(5)
+            .fill(0)
+            .map((el, idx) => idx + 6)
+            .map((number) => (
+              <PresetButton
+                key={number}
+                presetNum={String(number)}
+                handleButtonClick={handleButtonClick}
+                selectedPreset={selectedPreset}
+              />
+            ))}
         </div>
         <div className="speaker right"></div>
       </div>
       <ul id="keyboard">
-        <li
-          note="C"
-          className={`white ${noteOns.C && 'pressed'}`}
-          onMouseDown={handleMouseDown}
-          onMouseLeave={handleMouseUp}
-          onMouseUp={handleMouseUp}
-          onMouseEnter={handleMouseEnter}
-        ></li>
-        <li
-          note="C#"
-          className={`black ${noteOns['C#'] && 'pressed'}`}
-          onMouseDown={handleMouseDown}
-          onMouseLeave={handleMouseUp}
-          onMouseUp={handleMouseUp}
-          onMouseEnter={handleMouseEnter}
-        ></li>
-        <li
-          note="D"
-          className={`white offset ${noteOns.D && 'pressed'}`}
-          onMouseDown={handleMouseDown}
-          onMouseLeave={handleMouseUp}
-          onMouseUp={handleMouseUp}
-          onMouseEnter={handleMouseEnter}
-        ></li>
-        <li note="D#" className="black"></li>
-        <li note="E" className="white offset"></li>
-        <li note="F" className="white"></li>
-        <li note="F#" className="black"></li>
-        <li note="G" className="white offset"></li>
-        <li note="G#" className="black"></li>
-        <li note="A" className="white offset"></li>
-        <li note="A#" className="black"></li>
-        <li note="B" className="white offset"></li>
-        <li note="C2" className="white"></li>
-        <li note="C#2" className="black"></li>
-        <li note="D2" className="white offset"></li>
-        <li note="D#2" className="black"></li>
-        <li note="E2" className="white offset"></li>
-        <li note="F2" className="white"></li>
-        <li note="F#2" className="black"></li>
-        <li note="G2" className="white offset"></li>
-        <li note="G#2" className="black"></li>
-        <li note="A2" className="white offset"></li>
-        <li note="A#2" className="black"></li>
-        <li note="B2" className="white offset"></li>
-        <li note="C3" className="white"></li>
+        {Object.keys(notes).map((noteName, index) => (
+          <Key
+            key={noteName}
+            noteName={noteName}
+            handlers={keyHandlers}
+            noteOns={noteOns}
+            index={index}
+          />
+        ))}
       </ul>
     </div>
   );

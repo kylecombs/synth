@@ -48,6 +48,17 @@ const useKeyboard = () => {
     B: note('B'),
     C2: note('C2'),
     'C#2': note('C#2'),
+    D2: note('D2'),
+    'D#2': note('D#2'),
+    E2: note('E2'),
+    F2: note('F2'),
+    'F#2': note('F#2'),
+    G2: note('G2'),
+    'G#2': note('G#2'),
+    A2: note('A2'),
+    'A#2': note('A#2'),
+    B2: note('B2'),
+    C3: note('C3'),
   };
 
   return { notes, noteOns };
