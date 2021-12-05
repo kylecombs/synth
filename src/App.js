@@ -1,7 +1,33 @@
-import logo from './logo.svg';
+import React, { useState, useRef, useEffect } from 'react';
+import useKeyboard from './hooks/useKeyboard';
 import './App.css';
 
 function App() {
+  const [mouseDown, setMouseDown] = useState(false);
+  const { notes, noteOns } = useKeyboard();
+
+  useEffect(() => {
+    console.log(noteOns);
+  }, [notes, noteOns]);
+
+  const handleMouseDown = (event) => {
+    const noteName = event.target.getAttribute('note');
+    notes[noteName].playNote();
+    setMouseDown(true);
+  };
+
+  const handleMouseUp = (event) => {
+    const noteName = event.target.getAttribute('note');
+    notes[noteName].releaseNote();
+    setMouseDown(false);
+  };
+
+  const handleMouseEnter = (event) => {
+    if (mouseDown) {
+      handleMouseDown(event);
+    }
+  };
+
   return (
     <div id="synth">
       <div id="labels-container"></div>
@@ -9,15 +35,15 @@ function App() {
         <img src="https://logodix.com/logo/971634.png" alt="Yamaha Logo" />
       </div>
       <div id="controls">
-        <div class="speaker"></div>
+        <div className="speaker"></div>
         <div id="pitchbend">
-          <div class="knob"></div>
-          <div class="highlight"></div>
-          <div class="shaft"></div>
+          <div className="knob"></div>
+          <div className="highlight"></div>
+          <div className="shaft"></div>
         </div>
-        <div class="slider-container">
-          <div class="slider-slot"></div>
-          <div class="slider">
+        <div className="slider-container">
+          <div className="slider-slot"></div>
+          <div className="slider">
             <hr />
           </div>
           <hr />
@@ -29,35 +55,35 @@ function App() {
           <hr />
           <hr />
         </div>
-        <div class="slider-container">
-          <div class="slider-slot"></div>
-          <div class="slider octave">
+        <div className="slider-container">
+          <div className="slider-slot"></div>
+          <div className="slider octave">
             <hr />
           </div>
           <div id="octave-marks">
-            <div class="octave-mark">
+            <div className="octave-mark">
               <hr />
               +2
             </div>
-            <div class="octave-mark">
+            <div className="octave-mark">
               <hr />
               +1
             </div>
-            <div class="octave-mark">
+            <div className="octave-mark">
               <hr />
               &nbsp;0
             </div>
-            <div class="octave-mark">
+            <div className="octave-mark">
               <hr />
               -1
             </div>
-            <div class="octave-mark">
+            <div className="octave-mark">
               <hr />
               -2
             </div>
           </div>
         </div>
-        <div class="screen-display">
+        <div className="screen-display">
           <p>internal voice</p>
           <div id="patch-display">
             <p>bnk 1</p>
@@ -65,83 +91,104 @@ function App() {
           </div>
         </div>
         <div id="buttons-container">
-          <div class="button bank">
+          <div className="button bank">
             <p>Bank</p>
-            <div class="led-red"></div>
+            <div className="led-red"></div>
           </div>
-          <div class="button">
+          <div className="button">
             <p>1</p>
-            <div class="led-red"></div>
+            <div className="led-red"></div>
           </div>
-          <div class="button">
+          <div className="button">
             <p>2</p>
-            <div class="led-red"></div>
+            <div className="led-red"></div>
           </div>
-          <div class="button">
+          <div className="button">
             <p>3</p>
-            <div class="led-red"></div>
+            <div className="led-red"></div>
           </div>
-          <div class="button">
+          <div className="button">
             <p>4</p>
-            <div class="led-red"></div>
+            <div className="led-red"></div>
           </div>
-          <div class="button">
+          <div className="button">
             <p>5</p>
-            <div class="led-red on"></div>
+            <div className="led-red on"></div>
           </div>
-          <div class="button shift">
+          <div className="button shift">
             <p>Shift</p>
-            <div class="led-red"></div>
+            <div className="led-red"></div>
           </div>
-          <div class="button">
+          <div className="button">
             <p>6</p>
-            <div class="led-red"></div>{' '}
+            <div className="led-red"></div>{' '}
           </div>
-          <div class="button">
+          <div className="button">
             <p>7</p>
-            <div class="led-red"></div>
+            <div className="led-red"></div>
           </div>
-          <div class="button">
+          <div className="button">
             <p>8</p>
-            <div class="led-red"></div>
+            <div className="led-red"></div>
           </div>
-          <div class="button">
+          <div className="button">
             <p>9</p>
-            <div class="led-red"></div>
+            <div className="led-red"></div>
           </div>
-          <div class="button">
+          <div className="button">
             <p>10</p>
-            <div class="led-red"></div>
+            <div className="led-red"></div>
           </div>
         </div>
-        <div class="speaker right"></div>
+        <div className="speaker right"></div>
       </div>
       <ul id="keyboard">
-        <li note="C" class="white"></li>
-        <li note="C#" class="black"></li>
-        <li note="D" class="white offset"></li>
-        <li note="D#" class="black"></li>
-        <li note="E" class="white offset"></li>
-        <li note="F" class="white"></li>
-        <li note="F#" class="black"></li>
-        <li note="G" class="white offset"></li>
-        <li note="G#" class="black"></li>
-        <li note="A" class="white offset"></li>
-        <li note="A#" class="black"></li>
-        <li note="B" class="white offset"></li>
-        <li note="C2" class="white"></li>
-        <li note="C#2" class="black"></li>
-        <li note="D2" class="white offset"></li>
-        <li note="D#2" class="black"></li>
-        <li note="E2" class="white offset"></li>
-        <li note="F2" class="white"></li>
-        <li note="F#2" class="black"></li>
-        <li note="G2" class="white offset"></li>
-        <li note="G#2" class="black"></li>
-        <li note="A2" class="white offset"></li>
-        <li note="A#2" class="black"></li>
-        <li note="B2" class="white offset"></li>
-        <li note="C3" class="white"></li>
+        <li
+          note="C"
+          className={`white ${noteOns.C && 'pressed'}`}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseUp}
+          onMouseUp={handleMouseUp}
+          onMouseEnter={handleMouseEnter}
+        ></li>
+        <li
+          note="C#"
+          className={`black ${noteOns['C#'] && 'pressed'}`}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseUp}
+          onMouseUp={handleMouseUp}
+          onMouseEnter={handleMouseEnter}
+        ></li>
+        <li
+          note="D"
+          className={`white offset ${noteOns.D && 'pressed'}`}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseUp}
+          onMouseUp={handleMouseUp}
+          onMouseEnter={handleMouseEnter}
+        ></li>
+        <li note="D#" className="black"></li>
+        <li note="E" className="white offset"></li>
+        <li note="F" className="white"></li>
+        <li note="F#" className="black"></li>
+        <li note="G" className="white offset"></li>
+        <li note="G#" className="black"></li>
+        <li note="A" className="white offset"></li>
+        <li note="A#" className="black"></li>
+        <li note="B" className="white offset"></li>
+        <li note="C2" className="white"></li>
+        <li note="C#2" className="black"></li>
+        <li note="D2" className="white offset"></li>
+        <li note="D#2" className="black"></li>
+        <li note="E2" className="white offset"></li>
+        <li note="F2" className="white"></li>
+        <li note="F#2" className="black"></li>
+        <li note="G2" className="white offset"></li>
+        <li note="G#2" className="black"></li>
+        <li note="A2" className="white offset"></li>
+        <li note="A#2" className="black"></li>
+        <li note="B2" className="white offset"></li>
+        <li note="C3" className="white"></li>
       </ul>
     </div>
   );
