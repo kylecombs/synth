@@ -3,7 +3,6 @@ import React from 'react';
 const deactivateClick = { pointerEvents: 'none' };
 
 const PresetButton = (props) => {
-  console.log(typeof props.selectedPreset);
   return (
     <div
       className="button"

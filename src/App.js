@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import useKeyboard from './hooks/useKeyboard';
 import Key from './Key';
 import PresetButton from './PresetButton';
@@ -8,11 +8,14 @@ import './App.css';
 function App() {
   const [mouseDown, setMouseDown] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState('1');
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragDiff, setDragDiff] = useState(0);
+  const [volSliderPosition, setVolumeSliderPosition] = useState(-50);
   const { notes, noteOns } = useKeyboard();
 
-  useEffect(() => {
-    console.log(selectedPreset);
-  }, [selectedPreset]);
+  // useEffect(() => {
+  //   console.log(selectedPreset);
+  // }, [selectedPreset]);
 
   const handleMouseDown = (event) => {
     const noteName = event.target.getAttribute('note');
@@ -40,8 +43,18 @@ function App() {
 
   const handleButtonClick = (event) => {
     const presetNum = event.target.getAttribute('presetnum');
-    console.log(presetNum);
     setSelectedPreset(presetNum);
+  };
+
+  const handleVolumeSliderDrag = (event) => {
+    // make drag ghost image invisible
+    const img = new Image();
+    img.src =
+      'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+    event.dataTransfer.setDragImage(img, 0, 0);
+    // limit value within range
+    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 60);
+    if (isDragging) setVolumeSliderPosition(sliderPosition);
   };
 
   return (
@@ -57,9 +70,24 @@ function App() {
           <div className="highlight"></div>
           <div className="shaft"></div>
         </div>
-        <div className="slider-container">
+        <div
+          className="slider-container"
+          onMouseUp={() => {
+            setIsDragging(false);
+            console.log('goodbye');
+          }}
+        >
           <div className="slider-slot"></div>
-          <div className="slider">
+          <div
+            draggable="true"
+            className="slider"
+            style={{ transform: `translateY(${volSliderPosition}px)` }}
+            onMouseDown={() => {
+              setIsDragging(true);
+            }}
+            onDragStart={handleVolumeSliderDrag}
+            onDrag={handleVolumeSliderDrag}
+          >
             <hr />
           </div>
           <hr />

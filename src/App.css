@@ -44,8 +44,8 @@ body {
   fill: white;
 }
 
-#labels-container {
-}
+/* #labels-container {
+} */
 
 #synth {
   position: relative;
@@ -358,6 +358,7 @@ body {
 
 .button {
   display: flex;
+  cursor: pointer;
   position: relative;
   align-items: center;
   justify-content: space-between;
