@@ -9,13 +9,10 @@ function App() {
   const [mouseDown, setMouseDown] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState('1');
   const [isDragging, setIsDragging] = useState(false);
-  const [dragDiff, setDragDiff] = useState(0);
-  const [volSliderPosition, setVolumeSliderPosition] = useState(-50);
+  const [volSliderPosition, setVolumeSliderPosition] = useState(0);
+  const [octaveSliderPosition, setOctaveSliderPosition] = useState(10);
+  const [pitchbendPosition, setPitchbendPosition] = useState(40);
   const { notes, noteOns } = useKeyboard();
-
-  // useEffect(() => {
-  //   console.log(selectedPreset);
-  // }, [selectedPreset]);
 
   const handleMouseDown = (event) => {
     const noteName = event.target.getAttribute('note');
@@ -47,46 +44,88 @@ function App() {
   };
 
   const handleVolumeSliderDrag = (event) => {
-    // make drag ghost image invisible
-    const img = new Image();
-    img.src =
-      'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
-    event.dataTransfer.setDragImage(img, 0, 0);
     // limit value within range
-    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 60);
-    if (isDragging) setVolumeSliderPosition(sliderPosition);
+    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 80) + 10;
+    if (isDragging) {
+      setVolumeSliderPosition(sliderPosition);
+    }
+  };
+
+  const between = (value, min, max) => {
+    return value >= min && value <= max;
+  };
+
+  const handleOctaveSliderDrag = (event) => {
+    // limit value within range
+    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 70) + 45;
+    if (isDragging) {
+      // snap values to grid
+      if (between(sliderPosition, -25, -17)) {
+        setOctaveSliderPosition(-25);
+      } else if (between(sliderPosition, -16, 0)) {
+        setOctaveSliderPosition(-8);
+      } else if (between(sliderPosition, 1, 17)) {
+        setOctaveSliderPosition(8);
+      } else if (between(sliderPosition, 18, 33)) {
+        setOctaveSliderPosition(25);
+      } else if (between(sliderPosition, 34, 40)) {
+        setOctaveSliderPosition(40);
+      } else {
+        setOctaveSliderPosition(8);
+      }
+    }
+  };
+
+  const handlePitchBendDrag = (event) => {
+    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 70) + 80;
+    console.log(sliderPosition);
+    if (isDragging) {
+      setPitchbendPosition(sliderPosition);
+    }
   };
 
   return (
-    <div id="synth">
+    <div
+      id="synth"
+      onMouseUp={() => {
+        setIsDragging(false);
+        setPitchbendPosition(40);
+      }}
+    >
       <div id="labels-container"></div>
       <div id="logo">
         <img src="https://logodix.com/logo/971634.png" alt="Yamaha Logo" />
       </div>
       <div id="controls">
         <div className="speaker"></div>
-        <div id="pitchbend">
-          <div className="knob"></div>
-          <div className="highlight"></div>
-          <div className="shaft"></div>
-        </div>
         <div
-          className="slider-container"
-          onMouseUp={() => {
-            setIsDragging(false);
-            console.log('goodbye');
-          }}
+          id="pitchbend"
+          onMouseMove={handlePitchBendDrag}
+          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
         >
-          <div className="slider-slot"></div>
           <div
-            draggable="true"
-            className="slider"
-            style={{ transform: `translateY(${volSliderPosition}px)` }}
             onMouseDown={() => {
               setIsDragging(true);
             }}
-            onDragStart={handleVolumeSliderDrag}
-            onDrag={handleVolumeSliderDrag}
+            style={{ transform: `translateY(${pitchbendPosition}px)` }}
+          >
+            <div className="knob"></div>
+            <div className="highlight"></div>
+            <div className="shaft"></div>
+          </div>
+        </div>
+        <div
+          className="slider-container"
+          onMouseMove={handleVolumeSliderDrag}
+          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+        >
+          <div className="slider-slot"></div>
+          <div
+            onMouseDown={() => {
+              setIsDragging(true);
+            }}
+            className="slider"
+            style={{ transform: `translateY(${volSliderPosition}px)` }}
           >
             <hr />
           </div>
@@ -99,9 +138,19 @@ function App() {
           <hr />
           <hr />
         </div>
-        <div className="slider-container">
+        <div
+          className="slider-container"
+          onMouseMove={handleOctaveSliderDrag}
+          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+        >
           <div className="slider-slot"></div>
-          <div className="slider octave">
+          <div
+            onMouseDown={() => {
+              setIsDragging(true);
+            }}
+            className="slider octave"
+            style={{ transform: `translateY(${octaveSliderPosition}px)` }}
+          >
             <hr />
           </div>
           <div id="octave-marks">

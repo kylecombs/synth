@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 // import notes from './interface/notes';
 
 const useKeyboard = () => {
-  const keyboardNoteOns = {
-    C: false,
-    'C#': false,
-    D: false,
-  };
+  const keyboardNoteOns = {};
 
   const [noteOns, setNoteOns] = useState(keyboardNoteOns);
 
