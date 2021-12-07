@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+import { synth } from '../synth/synth';
+import presets from '../synth/presets';
 // import notes from './interface/notes';
+
+const instrument = synth(presets[0].settings);
 
 const useKeyboard = () => {
   const keyboardNoteOns = {};
@@ -17,6 +21,7 @@ const useKeyboard = () => {
         ...prevState,
         [state]: true,
       }));
+      instrument.triggerAttack(state);
     },
   });
 
@@ -26,35 +31,36 @@ const useKeyboard = () => {
         ...prevState,
         [state]: false,
       }));
+      instrument.triggerRelease();
     },
   });
 
   const notes = {
-    C: note('C'),
-    'C#': note('C#'),
-    D: note('D'),
-    'D#': note('D#'),
-    E: note('E'),
-    F: note('F'),
-    'F#': note('F#'),
-    G: note('G'),
-    'G#': note('G#'),
-    A: note('A'),
-    'A#': note('A#'),
-    B: note('B'),
-    C2: note('C2'),
-    'C#2': note('C#2'),
-    D2: note('D2'),
-    'D#2': note('D#2'),
-    E2: note('E2'),
-    F2: note('F2'),
-    'F#2': note('F#2'),
-    G2: note('G2'),
-    'G#2': note('G#2'),
-    A2: note('A2'),
-    'A#2': note('A#2'),
-    B2: note('B2'),
     C3: note('C3'),
+    'C#3': note('C#3'),
+    D3: note('D3'),
+    'D#3': note('D#3'),
+    E3: note('E3'),
+    F3: note('F3'),
+    'F#3': note('F#3'),
+    G3: note('G3'),
+    'G#3': note('G#3'),
+    A3: note('A3'),
+    'A#3': note('A#3'),
+    B3: note('B3'),
+    C4: note('C4'),
+    'C#4': note('C#4'),
+    D4: note('D4'),
+    'D#4': note('D#4'),
+    E4: note('E4'),
+    F4: note('F4'),
+    'F#4': note('F#4'),
+    G4: note('G4'),
+    'G#4': note('G#4'),
+    A4: note('A4'),
+    'A#4': note('A#4'),
+    B4: note('B4'),
+    C5: note('C5'),
   };
 
   return { notes, noteOns };

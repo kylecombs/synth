@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useKeyboard from './hooks/useKeyboard';
 import Key from './Key';
 import PresetButton from './PresetButton';
-import presets from './hooks/presets';
+import presets from './synth/presets';
 import './App.css';
 
 function App() {
@@ -78,7 +78,6 @@ function App() {
 
   const handlePitchBendDrag = (event) => {
     let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 70) + 80;
-    console.log(sliderPosition);
     if (isDragging) {
       setPitchbendPosition(sliderPosition);
     }
@@ -180,7 +179,7 @@ function App() {
           <p>internal voice</p>
           <div id="patch-display">
             <p>bnk 1</p>
-            <p>{presets[parseInt(selectedPreset) - 1].toUpperCase()}</p>
+            <p>{presets[parseInt(selectedPreset) - 1].name.toUpperCase()}</p>
           </div>
         </div>
         <div id="buttons-container">
