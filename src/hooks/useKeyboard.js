@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { synth } from '../synth/synth';
 import presets from '../synth/presets';
-// import notes from './interface/notes';
-
-const instrument = synth(presets[0].settings);
+import * as Tone from 'tone';
 
 const useKeyboard = () => {
   const keyboardNoteOns = {};
 
   const [noteOns, setNoteOns] = useState(keyboardNoteOns);
+
+  const [preset, setPreset] = useState(0);
+
+  const instrument = synth(presets[preset].settings);
 
   const note = (noteName) => {
     const state = noteName;
@@ -17,21 +19,21 @@ const useKeyboard = () => {
 
   const playNote = (state) => ({
     playNote: () => {
+      instrument.triggerAttack(state);
       setNoteOns((prevState) => ({
         ...prevState,
         [state]: true,
       }));
-      instrument.triggerAttack(state);
     },
   });
 
   const releaseNote = (state) => ({
     releaseNote: () => {
+      instrument.triggerRelease();
       setNoteOns((prevState) => ({
         ...prevState,
         [state]: false,
       }));
-      instrument.triggerRelease();
     },
   });
 
@@ -63,7 +65,7 @@ const useKeyboard = () => {
     C5: note('C5'),
   };
 
-  return { notes, noteOns };
+  return { notes, noteOns, setPreset };
 };
 
 export default useKeyboard;

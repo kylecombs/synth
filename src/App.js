@@ -12,7 +12,7 @@ function App() {
   const [volSliderPosition, setVolumeSliderPosition] = useState(0);
   const [octaveSliderPosition, setOctaveSliderPosition] = useState(10);
   const [pitchbendPosition, setPitchbendPosition] = useState(40);
-  const { notes, noteOns } = useKeyboard();
+  const { notes, noteOns, setPreset } = useKeyboard();
 
   const handleMouseDown = (event) => {
     const noteName = event.target.getAttribute('note');
@@ -40,6 +40,8 @@ function App() {
 
   const handleButtonClick = (event) => {
     const presetNum = event.target.getAttribute('presetnum');
+    console.log(presetNum);
+    setPreset(presetNum - 1);
     setSelectedPreset(presetNum);
   };
 

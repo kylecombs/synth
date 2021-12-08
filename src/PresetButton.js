@@ -1,4 +1,5 @@
 import React from 'react';
+import useKeyboard from './hooks/useKeyboard';
 
 const deactivateClick = { pointerEvents: 'none' };
 
