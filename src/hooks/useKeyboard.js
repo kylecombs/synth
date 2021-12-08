@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { synth } from '../synth/synth';
 import presets from '../synth/presets';
+import { instrument, setInstrument } from '../synth/synth';
 // import notes from './interface/notes';
-
-const instrument = synth(presets[0].settings);
 
 const useKeyboard = () => {
   const keyboardNoteOns = {};
-
   const [noteOns, setNoteOns] = useState(keyboardNoteOns);
 
   const note = (noteName) => {
@@ -63,7 +61,7 @@ const useKeyboard = () => {
     C5: note('C5'),
   };
 
-  return { notes, noteOns };
+  return { notes, noteOns, setInstrument };
 };
 
 export default useKeyboard;
