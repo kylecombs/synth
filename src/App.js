@@ -61,7 +61,7 @@ function App() {
 
   const handleOctaveSliderDrag = (event) => {
     // limit value within range
-    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 80) + 55;
+    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 80) + 75;
     if (isDragging) {
       // snap values to grid
       if (between(sliderPosition, -25, -17)) {
