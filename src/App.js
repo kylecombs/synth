@@ -3,14 +3,14 @@ import useKeyboard from './hooks/useKeyboard';
 import Key from './Key';
 import PresetButton from './PresetButton';
 import presets from './synth/presets';
-import { setVolume, setOctave } from './synth/synth';
+import { setVolume, setOctave, setPitchBend } from './synth/synth';
 import './App.css';
 
 function App() {
   const [mouseDown, setMouseDown] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState('1');
   const [isDragging, setIsDragging] = useState(false);
-  const [volSliderPosition, setVolumeSliderPosition] = useState(0);
+  const [volSliderPosition, setVolumeSliderPosition] = useState(-20);
   const [octaveSliderPosition, setOctaveSliderPosition] = useState(10);
   const [pitchbendPosition, setPitchbendPosition] = useState(40);
   const { notes, noteOns, setInstrument } = useKeyboard();
@@ -86,9 +86,13 @@ function App() {
   };
 
   const handlePitchBendDrag = (event) => {
-    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 70) + 80;
+    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 80) + 90;
+    // change range based on formula below
+    // NewValue = (((Value - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
+    let pitchbendValue = ((sliderPosition - 68) * 2) / (10 - 68) - 1;
     if (isDragging) {
       setPitchbendPosition(sliderPosition);
+      setPitchBend(pitchbendValue);
     }
   };
 
@@ -98,13 +102,18 @@ function App() {
       onMouseUp={() => {
         setIsDragging(false);
         setPitchbendPosition(40);
+        setPitchBend(0);
       }}
     >
-      <div id="labels-container"></div>
+      <div id="labels-container">
+        <p>PB</p>
+        <p>VOL</p>
+        <p>OCT</p>
+      </div>
       <div id="logo">
         <img src="https://logodix.com/logo/971634.png" alt="Yamaha Logo" />
       </div>
-      <div id="controls">
+      <div id="controls" draggable="false">
         <div className="speaker"></div>
         <div
           id="pitchbend"

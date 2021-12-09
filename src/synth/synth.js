@@ -5,7 +5,7 @@ import { onMIDIInit, onMIDIFail } from './midi';
 // initialize midi
 navigator.requestMIDIAccess({}).then(onMIDIInit, onMIDIFail);
 
-const gainNode = new Tone.Gain(0).toDestination();
+const gainNode = new Tone.Gain(0.4).toDestination();
 
 export const synth = (preset) => new Tone.FMSynth(preset).connect(gainNode);
 
@@ -35,4 +35,11 @@ export const setOctave = (octaveNum) => {
 export const setVolume = (volLevel) => {
   const limitedVol = Math.min(Math.max(volLevel, 0), 1);
   gainNode.gain.value = limitedVol;
+};
+
+export const setPitchBend = (pitchBend) => {
+  const pitchBendOffset = pitchBend * 1200;
+  instrument.set({
+    detune: instrument.detuneOffset + octave * 1200 + pitchBendOffset,
+  });
 };

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { instrument, setInstrument } from '../synth/synth';
-// import { handleMIDIMessage } from '../synth/midi';
 
 const useKeyboard = () => {
   const keyboardNoteOns = {};

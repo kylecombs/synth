@@ -46,11 +46,20 @@ p {
 
 #logo img {
   width: 100px;
-  fill: white;
+  /* fill: white; */
 }
 
-/* #labels-container {
-} */
+#labels-container {
+  display: flex;
+  position: absolute;
+  left: 100px;
+  justify-content: space-between;
+  top: 12px;
+  width: 131px;
+  color: #f1f1f1;
+  font-size: 12px;
+  line-height: 0;
+}
 
 #synth {
   position: relative;

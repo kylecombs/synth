@@ -1,4 +1,5 @@
 import { instrument } from './synth';
+import * as Tone from 'tone';
 
 let noteOn = false;
 
@@ -8,7 +9,7 @@ export const handleMIDIMessage = (event) => {
   const midiNote = data[1];
   if (data[0] === 144 && noteOn === false) {
     noteOn = true;
-    instrument.triggerAttack('C4');
+    instrument.triggerAttack(Tone.Midi(midiNote));
   }
   if (data[0] === 128 && noteOn === true) {
     noteOn = false;
