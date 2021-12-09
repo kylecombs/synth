@@ -1,4 +1,4 @@
-import marimba from './settings/marimba.json';
+// import marimba from './settings/marimba.json';
 
 const marimbaSettings = {
   volume: 0,
