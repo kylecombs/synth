@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useKeyboard from './hooks/useKeyboard';
 import Key from './Key';
 import PresetButton from './PresetButton';
+// import MidiSelect from './MidiSelect';
 import presets from './synth/presets';
 import { setVolume, setOctave, setPitchBend } from './synth/synth';
 import './App.css';
@@ -61,7 +62,7 @@ function App() {
 
   const handleOctaveSliderDrag = (event) => {
     // limit value within range
-    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 80) + 75;
+    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 80) + 55;
     if (isDragging) {
       // snap values to grid
       if (between(sliderPosition, -25, -17)) {
@@ -97,158 +98,161 @@ function App() {
   };
 
   return (
-    <div
-      id="synth"
-      onMouseUp={() => {
-        setIsDragging(false);
-        setPitchbendPosition(40);
-        setPitchBend(0);
-      }}
-    >
-      <div id="labels-container">
-        <p>PB</p>
-        <p>VOL</p>
-        <p>OCT</p>
-      </div>
-      <div id="logo">
-        <img src="https://logodix.com/logo/971634.png" alt="Yamaha Logo" />
-      </div>
-      <div id="controls" draggable="false">
-        <div className="speaker"></div>
-        <div
-          id="pitchbend"
-          onMouseMove={handlePitchBendDrag}
-          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-        >
-          <div
-            onMouseDown={() => {
-              setIsDragging(true);
-            }}
-            style={{ transform: `translateY(${pitchbendPosition}px)` }}
-          >
-            <div className="knob"></div>
-            <div className="highlight"></div>
-            <div className="shaft"></div>
-          </div>
+    <div>
+      {/* <MidiSelect /> */}
+      <div
+        id="synth"
+        onMouseUp={() => {
+          setIsDragging(false);
+          setPitchbendPosition(40);
+          setPitchBend(0);
+        }}
+      >
+        <div id="labels-container">
+          <p>PB</p>
+          <p>VOL</p>
+          <p>OCT</p>
         </div>
-        <div
-          className="slider-container"
-          onMouseMove={handleVolumeSliderDrag}
-          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-        >
-          <div className="slider-slot"></div>
+        <div id="logo">
+          <img src="https://logodix.com/logo/971634.png" alt="Yamaha Logo" />
+        </div>
+        <div id="controls" draggable="false">
+          <div className="speaker"></div>
           <div
-            onMouseDown={() => {
-              setIsDragging(true);
-            }}
-            className="slider"
-            style={{ transform: `translateY(${volSliderPosition}px)` }}
+            id="pitchbend"
+            onMouseMove={handlePitchBendDrag}
+            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
           >
+            <div
+              onMouseDown={() => {
+                setIsDragging(true);
+              }}
+              style={{ transform: `translateY(${pitchbendPosition}px)` }}
+            >
+              <div className="knob"></div>
+              <div className="highlight"></div>
+              <div className="shaft"></div>
+            </div>
+          </div>
+          <div
+            className="slider-container"
+            onMouseMove={handleVolumeSliderDrag}
+            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+          >
+            <div className="slider-slot"></div>
+            <div
+              onMouseDown={() => {
+                setIsDragging(true);
+              }}
+              className="slider"
+              style={{ transform: `translateY(${volSliderPosition}px)` }}
+            >
+              <hr />
+            </div>
+            <hr />
+            <hr />
+            <hr />
+            <hr />
+            <hr />
+            <hr />
+            <hr />
             <hr />
           </div>
-          <hr />
-          <hr />
-          <hr />
-          <hr />
-          <hr />
-          <hr />
-          <hr />
-          <hr />
-        </div>
-        <div
-          className="slider-container"
-          onMouseMove={handleOctaveSliderDrag}
-          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-        >
-          <div className="slider-slot"></div>
           <div
-            onMouseDown={() => {
-              setIsDragging(true);
-            }}
-            className="slider octave"
-            style={{ transform: `translateY(${octaveSliderPosition}px)` }}
+            className="slider-container"
+            onMouseMove={handleOctaveSliderDrag}
+            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
           >
-            <hr />
+            <div className="slider-slot"></div>
+            <div
+              onMouseDown={() => {
+                setIsDragging(true);
+              }}
+              className="slider octave"
+              style={{ transform: `translateY(${octaveSliderPosition}px)` }}
+            >
+              <hr />
+            </div>
+            <div id="octave-marks">
+              <div className="octave-mark">
+                <hr />
+                +2
+              </div>
+              <div className="octave-mark">
+                <hr />
+                +1
+              </div>
+              <div className="octave-mark">
+                <hr />
+                &nbsp;0
+              </div>
+              <div className="octave-mark">
+                <hr />
+                -1
+              </div>
+              <div className="octave-mark">
+                <hr />
+                -2
+              </div>
+            </div>
           </div>
-          <div id="octave-marks">
-            <div className="octave-mark">
-              <hr />
-              +2
-            </div>
-            <div className="octave-mark">
-              <hr />
-              +1
-            </div>
-            <div className="octave-mark">
-              <hr />
-              &nbsp;0
-            </div>
-            <div className="octave-mark">
-              <hr />
-              -1
-            </div>
-            <div className="octave-mark">
-              <hr />
-              -2
+          <div className="screen-display">
+            <p>internal voice</p>
+            <div id="patch-display">
+              <p>bnk 1</p>
+              <p>
+                {selectedPreset <= presets.length
+                  ? presets[parseInt(selectedPreset) - 1].name.toUpperCase()
+                  : 'EMPTY'}
+              </p>
             </div>
           </div>
+          <div id="buttons-container">
+            <div className="button bank">
+              <p>Bank</p>
+              <div className="led-red"></div>
+            </div>
+            {Array(5)
+              .fill(0)
+              .map((el, idx) => idx + 1)
+              .map((number) => (
+                <PresetButton
+                  key={number}
+                  presetNum={String(number)}
+                  handleButtonClick={handleButtonClick}
+                  selectedPreset={selectedPreset}
+                />
+              ))}
+            <div className="button shift">
+              <p>Shift</p>
+              <div className="led-red"></div>
+            </div>
+            {Array(5)
+              .fill(0)
+              .map((el, idx) => idx + 6)
+              .map((number) => (
+                <PresetButton
+                  key={number}
+                  presetNum={String(number)}
+                  handleButtonClick={handleButtonClick}
+                  selectedPreset={selectedPreset}
+                />
+              ))}
+          </div>
+          <div className="speaker right"></div>
         </div>
-        <div className="screen-display">
-          <p>internal voice</p>
-          <div id="patch-display">
-            <p>bnk 1</p>
-            <p>
-              {selectedPreset <= presets.length
-                ? presets[parseInt(selectedPreset) - 1].name.toUpperCase()
-                : 'EMPTY'}
-            </p>
-          </div>
-        </div>
-        <div id="buttons-container">
-          <div className="button bank">
-            <p>Bank</p>
-            <div className="led-red"></div>
-          </div>
-          {Array(5)
-            .fill(0)
-            .map((el, idx) => idx + 1)
-            .map((number) => (
-              <PresetButton
-                key={number}
-                presetNum={String(number)}
-                handleButtonClick={handleButtonClick}
-                selectedPreset={selectedPreset}
-              />
-            ))}
-          <div className="button shift">
-            <p>Shift</p>
-            <div className="led-red"></div>
-          </div>
-          {Array(5)
-            .fill(0)
-            .map((el, idx) => idx + 6)
-            .map((number) => (
-              <PresetButton
-                key={number}
-                presetNum={String(number)}
-                handleButtonClick={handleButtonClick}
-                selectedPreset={selectedPreset}
-              />
-            ))}
-        </div>
-        <div className="speaker right"></div>
+        <ul id="keyboard">
+          {Object.keys(notes).map((noteName, index) => (
+            <Key
+              key={noteName}
+              noteName={noteName}
+              handlers={keyHandlers}
+              noteOns={noteOns}
+              index={index}
+            />
+          ))}
+        </ul>
       </div>
-      <ul id="keyboard">
-        {Object.keys(notes).map((noteName, index) => (
-          <Key
-            key={noteName}
-            noteName={noteName}
-            handlers={keyHandlers}
-            noteOns={noteOns}
-            index={index}
-          />
-        ))}
-      </ul>
     </div>
   );
 }

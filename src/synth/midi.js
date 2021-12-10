@@ -3,6 +3,8 @@ import * as Tone from 'tone';
 
 let noteOn = false;
 
+export const MIDIInputs = [];
+
 // // Handle incoming MIDI messages
 export const handleMIDIMessage = (event) => {
   const data = event.data;
@@ -19,7 +21,7 @@ export const handleMIDIMessage = (event) => {
 };
 
 export const onMIDIInit = (MIDIAcessObject) => {
-  const MIDIInputs = [];
+  // const MIDIInputs = [];
   // iterate through all the inputs and store them in an array
   for (let input of MIDIAcessObject.inputs.values()) {
     console.log(`Found input: ${input.name}`);
