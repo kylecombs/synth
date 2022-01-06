@@ -50,7 +50,7 @@ function App() {
     event.preventDefault();
     // limit value within range
     console.log(event.clientY);
-    const sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 87) + 20;
+    const sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 95) + 30;
     if (isDragging) {
       setVolumeSliderPosition(sliderPosition);
       const normalizedValue = (-sliderPosition + 3) / 71;
@@ -65,7 +65,7 @@ function App() {
   const handleOctaveSliderDrag = (event) => {
     event.preventDefault();
     // limit value within range
-    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 80) + 55;
+    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 120) + 90;
     if (isDragging) {
       // snap values to grid
       if (between(sliderPosition, -25, -17)) {
@@ -91,7 +91,7 @@ function App() {
 
   const handlePitchBendDrag = (event) => {
     event.preventDefault();
-    let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 80) + 90;
+    let sliderPosition = -Math.min(Math.max(440 - event.clientY, 1), 110) + 115;
     // change range based on formula below
     // NewValue = (((Value - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
     let pitchbendValue = ((sliderPosition - 68) * 2) / (10 - 68) - 1;
@@ -111,6 +111,7 @@ function App() {
           setPitchbendPosition(40);
           setPitchBend(0);
         }}
+        draggable="false"
       >
         <div id="labels-container">
           <p>PB</p>
