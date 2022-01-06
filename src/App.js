@@ -49,6 +49,7 @@ function App() {
   const handleVolumeSliderDrag = (event) => {
     event.preventDefault();
     // limit value within range
+    console.log(event.clientY);
     const sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 87) + 20;
     if (isDragging) {
       setVolumeSliderPosition(sliderPosition);
@@ -199,7 +200,7 @@ function App() {
               </div>
             </div>
           </div>
-          <div className="screen-display">
+          <div className="screen-display" draggable="false">
             <p>internal voice</p>
             <div id="patch-display">
               <p>bnk 1</p>
