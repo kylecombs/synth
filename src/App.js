@@ -47,6 +47,7 @@ function App() {
   };
 
   const handleVolumeSliderDrag = (event) => {
+    event.preventDefault();
     // limit value within range
     const sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 87) + 20;
     if (isDragging) {
@@ -61,6 +62,7 @@ function App() {
   };
 
   const handleOctaveSliderDrag = (event) => {
+    event.preventDefault();
     // limit value within range
     let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 80) + 55;
     if (isDragging) {
@@ -87,6 +89,7 @@ function App() {
   };
 
   const handlePitchBendDrag = (event) => {
+    event.preventDefault();
     let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 80) + 90;
     // change range based on formula below
     // NewValue = (((Value - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
