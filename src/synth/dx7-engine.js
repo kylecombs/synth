@@ -43,10 +43,10 @@ class DX7Engine {
     const bufferSizeMs = 1000 * bufferSize / config.sampleRate;
     const msPerSample = 1000 / config.sampleRate;
     
-    // Attach to window to avoid GC
+    // Audio processing callback
     let firstProcess = true;
     let debugCounter = 0;
-    this.scriptProcessor.onaudioprocess = window.dx7AudioProcess = (e) => {
+    this.scriptProcessor.onaudioprocess = (e) => {
       const buffer = e.outputBuffer;
       const outputL = buffer.getChannelData(0);
       const outputR = buffer.getChannelData(1);
