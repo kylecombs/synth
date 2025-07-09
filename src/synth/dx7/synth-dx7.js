@@ -99,7 +99,8 @@ class SynthDX7 {
 	}
 
 	noteOff(note) {
-		for (let i = 0, voice; i < this.voices.length, voice = this.voices[i]; i++) {
+		for (let i = 0; i < this.voices.length; i++) {
+			const voice = this.voices[i];
 			if (voice && voice.note === note && voice.down === true) {
 				voice.down = false;
 				if (this.sustainPedalDown === false)
