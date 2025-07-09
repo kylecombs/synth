@@ -1,45 +1,24 @@
-import * as Tone from 'tone';
-import presets from './presets';
+import DX7Engine from './dx7-engine';
 import { onMIDIInit, onMIDIFail } from './midi';
 
 // initialize midi
 navigator.requestMIDIAccess({}).then(onMIDIInit, onMIDIFail);
 
-const gainNode = new Tone.Gain(0.4).toDestination();
-
-export const synth = (preset) => new Tone.FMSynth(preset).connect(gainNode);
-
-export let instrument = synth(presets[0].settings);
-
-instrument.detuneOffset = 0;
-
-let octave = 0;
+// Create DX7 engine instance
+export const instrument = new DX7Engine();
 
 export const setInstrument = (presetNum) => {
-  if (presetNum < presets.length) {
-    instrument = synth(presets[presetNum].settings);
-    instrument.detuneOffset = instrument.detune.value;
-    instrument.set({
-      detune: instrument.detuneOffset + octave * 1200,
-    });
-  }
+  instrument.setPreset(presetNum);
 };
 
 export const setOctave = (octaveNum) => {
-  octave = octaveNum;
-  instrument.set({
-    detune: instrument.detuneOffset + octaveNum * 1200,
-  });
+  instrument.setOctave(octaveNum);
 };
 
 export const setVolume = (volLevel) => {
-  const limitedVol = Math.min(Math.max(volLevel, 0), 1);
-  gainNode.gain.value = limitedVol;
+  instrument.setVolume(volLevel);
 };
 
 export const setPitchBend = (pitchBend) => {
-  const pitchBendOffset = pitchBend * 1200;
-  instrument.set({
-    detune: instrument.detuneOffset + octave * 1200 + pitchBendOffset,
-  });
+  instrument.setPitchBend(pitchBend);
 };

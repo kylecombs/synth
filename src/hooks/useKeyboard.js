@@ -26,7 +26,7 @@ const useKeyboard = () => {
         ...prevState,
         [state]: false,
       }));
-      instrument.triggerRelease();
+      instrument.triggerRelease(state);
     },
   });
 

@@ -3,7 +3,7 @@ import useKeyboard from './hooks/useKeyboard';
 import Key from './Key';
 import PresetButton from './PresetButton';
 // import MidiSelect from './MidiSelect';
-import presets from './synth/presets';
+import { instrument } from './synth/synth';
 import { setVolume, setOctave, setPitchBend } from './synth/synth';
 import './App.css';
 
@@ -11,7 +11,7 @@ function App() {
   const [mouseDown, setMouseDown] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState('1');
   const [isDragging, setIsDragging] = useState(false);
-  const [volSliderPosition, setVolumeSliderPosition] = useState(-20);
+  const [volSliderPosition, setVolumeSliderPosition] = useState(-50); // Updated to match 0.8 volume
   const [octaveSliderPosition, setOctaveSliderPosition] = useState(10);
   const [pitchbendPosition, setPitchbendPosition] = useState(40);
   const { notes, noteOns, setInstrument } = useKeyboard();
@@ -24,8 +24,19 @@ function App() {
 
   const handleMouseUp = (event) => {
     const noteName = event.target.getAttribute('note');
-    notes[noteName].releaseNote();
+    if (noteName && notes[noteName]) {
+      notes[noteName].releaseNote();
+    }
     setMouseDown(false);
+  };
+  
+  const handleMouseLeave = (event) => {
+    if (mouseDown) {
+      const noteName = event.target.getAttribute('note');
+      if (noteName && notes[noteName]) {
+        notes[noteName].releaseNote();
+      }
+    }
   };
 
   const handleMouseEnter = (event) => {
@@ -38,6 +49,7 @@ function App() {
     handleMouseDown,
     handleMouseUp,
     handleMouseEnter,
+    handleMouseLeave,
   };
 
   const handleButtonClick = (event) => {
@@ -206,8 +218,8 @@ function App() {
             <div id="patch-display">
               <p>bnk 1</p>
               <p>
-                {selectedPreset <= presets.length
-                  ? presets[parseInt(selectedPreset) - 1].name.toUpperCase()
+                {selectedPreset <= instrument.getPresetCount()
+                  ? instrument.getPresetName().toUpperCase()
                   : 'EMPTY'}
               </p>
             </div>

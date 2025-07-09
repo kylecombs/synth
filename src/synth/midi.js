@@ -1,22 +1,45 @@
 import { instrument } from './synth';
-import * as Tone from 'tone';
-
-let noteOn = false;
 
 export const MIDIInputs = [];
 
-// // Handle incoming MIDI messages
+// Handle incoming MIDI messages
 export const handleMIDIMessage = (event) => {
   const data = event.data;
   const midiNote = data[1];
-  if (data[0] === 144 && noteOn === false) {
-    noteOn = true;
-    instrument.triggerAttack(Tone.Midi(midiNote));
+  const velocity = data[2];
+  
+  // Convert MIDI note to note name
+  const notesArray = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const noteName = notesArray[midiNote % 12];
+  const noteOctave = Math.floor(midiNote / 12) - 1;
+  const noteNameWithOctave = noteName + String(noteOctave);
+  
+  if (data[0] === 144 && velocity > 0) {
+    // Note on
+    instrument.triggerAttack(noteNameWithOctave);
   }
-  if (data[0] === 128 && noteOn === true) {
-    noteOn = false;
-    instrument.triggerRelease();
+  if (data[0] === 128 || (data[0] === 144 && velocity === 0)) {
+    // Note off
+    instrument.triggerRelease(noteNameWithOctave);
   }
+  
+  // Handle pitch bend
+  if (data[0] >= 224 && data[0] <= 239) {
+    const pitchBendValue = ((data[2] << 7) + data[1] - 8192) / 8192;
+    instrument.setPitchBend(pitchBendValue);
+  }
+  
+  // Handle mod wheel
+  if (data[0] === 176 && data[1] === 1) {
+    // Modulation wheel - could be used for DX7 parameters
+  }
+  
+  // Handle volume control
+  if (data[0] === 176 && data[1] === 7) {
+    const volLevel = data[2] / 127;
+    instrument.setVolume(volLevel);
+  }
+  
   return data;
 };
 
