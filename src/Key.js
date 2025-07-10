@@ -11,7 +11,7 @@ const Key = (props) => {
         isOffset(props.noteName) ? 'offset' : ''
       } ${props.noteOns[props.noteName] ? 'pressed' : ''}`}
       onMouseDown={props.handlers.handleMouseDown}
-      onMouseLeave={props.handlers.handleMouseUp}
+      onMouseLeave={props.handlers.handleMouseLeave}
       onMouseUp={props.handlers.handleMouseUp}
       onMouseEnter={props.handlers.handleMouseEnter}
     ></li>
