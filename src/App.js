@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useKeyboard from './hooks/useKeyboard';
 import Key from './Key';
 import PresetButton from './PresetButton';
@@ -12,9 +12,28 @@ function App() {
   const [selectedPreset, setSelectedPreset] = useState('1');
   const [isDragging, setIsDragging] = useState(false);
   const [volSliderPosition, setVolumeSliderPosition] = useState(-50); // Updated to match 0.8 volume
-  const [octaveSliderPosition, setOctaveSliderPosition] = useState(10);
+  const [octaveSliderPosition, setOctaveSliderPosition] = useState(8);
   const [pitchbendPosition, setPitchbendPosition] = useState(40);
-  const { notes, noteOns, setInstrument } = useKeyboard();
+  const { notes, noteOns, setInstrument, keyboardOctave, setKeyboardOctave } = useKeyboard();
+
+  // Sync keyboard octave with UI and synth engine
+  useEffect(() => {
+    // Map keyboard octave (0-7) to UI positions and synth octave offset
+    const octaveMap = {
+      1: { position: 40, offset: -2 },
+      2: { position: 25, offset: -1 },
+      3: { position: 8, offset: 0 },
+      4: { position: -8, offset: 1 },
+      5: { position: -25, offset: 2 }
+    };
+    
+    // Clamp keyboard octave to valid range for our 32-key keyboard (F2-C5)
+    const clampedOctave = Math.max(1, Math.min(5, keyboardOctave));
+    
+    const mapping = octaveMap[clampedOctave] || octaveMap[3];
+    setOctaveSliderPosition(mapping.position);
+    setOctave(mapping.offset);
+  }, [keyboardOctave]);
 
   const handleMouseDown = (event) => {
     const noteName = event.target.getAttribute('note');
@@ -79,24 +98,30 @@ function App() {
     // limit value within range
     let sliderPosition = -Math.min(Math.max(435 - event.clientY, 1), 120) + 90;
     if (isDragging) {
-      // snap values to grid
+      // snap values to grid and update keyboard octave
       if (between(sliderPosition, -25, -17)) {
         setOctaveSliderPosition(-25);
         setOctave(2);
+        setKeyboardOctave(5);
       } else if (between(sliderPosition, -16, 0)) {
         setOctaveSliderPosition(-8);
         setOctave(1);
+        setKeyboardOctave(4);
       } else if (between(sliderPosition, 1, 17)) {
         setOctaveSliderPosition(8);
         setOctave(0);
+        setKeyboardOctave(3);
       } else if (between(sliderPosition, 18, 33)) {
         setOctaveSliderPosition(25);
         setOctave(-1);
+        setKeyboardOctave(2);
       } else if (between(sliderPosition, 34, 40)) {
         setOctaveSliderPosition(40);
         setOctave(-2);
+        setKeyboardOctave(1);
       } else {
         setOctaveSliderPosition(8);
+        setKeyboardOctave(3);
       }
     }
   };
@@ -116,6 +141,9 @@ function App() {
   return (
     <div>
       {/* <MidiSelect /> */}
+      {/* <div style={{ textAlign: 'center', padding: '10px', background: '#222', color: '#fff', fontSize: '12px' }}>
+        <p>🎹 <strong>Play with QWERTY keys:</strong> A-; (white keys) | W,E,T,Y,U,O,P (black keys) | Z/X (octave down/up)</p>
+      </div> */}
       <div
         id="synth"
         onMouseUp={() => {
@@ -259,7 +287,12 @@ function App() {
           <div className="speaker right"></div>
         </div>
         <ul id="keyboard">
-          {Object.keys(notes).map((noteName, index) => (
+          {/* Fixed 32-key keyboard from F2 to C5 */}
+          {['F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'B2',
+            'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
+            'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4',
+            'C5'
+          ].map((noteName, index) => (
             <Key
               key={noteName}
               noteName={noteName}
